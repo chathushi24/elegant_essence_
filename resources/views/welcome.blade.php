@@ -9,7 +9,6 @@
         <h4 class="text-lg mb-2">Welcome to the store</h4>
         <h2 class="text-4xl mb-2">Embrace yourself with</h2>
         <h1 class="text-6xl font-bold mb-4">ELEGANT ESSENCE</h1>
-        <p class="text-lg">Trade-in-offer</p>
     </div>
 </section>
 
