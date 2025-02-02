@@ -6,7 +6,7 @@
 <section id="hero" class="relative h-screen text-white bg-cover bg-center top-0 z-50 overflow-y-scroll mt-0" style="background-image: url('/storage/images/freestocks-_3Q3tsJ01nc-unsplash.jpg');">
     <div class="absolute inset-0 bg-black bg-opacity-50"></div> 
     <div class="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center">
-        <h4 class="text-lg mb-2">Hello, Welcome to the store</h4>
+        <h4 class="text-lg mb-2">Welcome to the store</h4>
         <h2 class="text-4xl mb-2">Embrace yourself with</h2>
         <h1 class="text-6xl font-bold mb-4">ELEGANT ESSENCE</h1>
         <p class="text-lg">Trade-in-offer</p>
