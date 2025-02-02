@@ -9,12 +9,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Admin\OrderController;
 
-// ✅ Homepage Route
-Route::get('/', function () {
-    $recentProducts = \App\Models\Product::orderBy('created_at', 'desc')->limit(6)->get();
-    return view('welcome', compact('recentProducts'));
-})->name('home');
-
 // ✅ Jetstream Authentication for Users
 Route::middleware([
     'auth:sanctum',
@@ -22,9 +16,17 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('welcome');
+        $recentProducts = \App\Models\Product::orderBy('created_at', 'desc')->limit(6)->get();
+        return view('welcome', compact('recentProducts'));
     })->name('dashboard');
 });
+
+// ✅ Homepage Route (For Unauthenticated Users)
+Route::get('/', function () {
+    $recentProducts = \App\Models\Product::orderBy('created_at', 'desc')->limit(6)->get();
+    return view('welcome', compact('recentProducts'));
+})->name('home');
+
 
 // ✅ Admin Authentication Routes
 Route::prefix('admin')->group(function () {
