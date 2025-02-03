@@ -12,7 +12,7 @@ class Admin extends Model implements AuthenticatableContract
 {
     use Authenticatable, HasApiTokens, Notifiable;
 
-    protected $collection = 'admins'; // ✅ Define MongoDB collection name
+    protected $collection = 'admins'; 
 
     protected $fillable = [
         'name',

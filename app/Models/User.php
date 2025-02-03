@@ -12,7 +12,7 @@ class User extends Model implements AuthenticatableContract
 {
     use Authenticatable, HasApiTokens, Notifiable;
 
-    protected $collection = 'users'; // ✅ Define MongoDB collection name
+    protected $collection = 'users'; 
 
     protected $fillable = [
         'name',

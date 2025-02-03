@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Link to users table
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade'); // Link to products table
             $table->integer('quantity');
-            $table->decimal('price', 10, 2); // Price at the time of adding to cart
+            $table->decimal('price', 10, 2); 
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ class OrderController extends Controller
         $orders = Order::with('user')->get(); // Fetch orders with user data
     
         foreach ($orders as $order) {
-            // Ensure the product_id is a valid ObjectId
+            // the product_id is a valid ObjectId
             $productId = is_string($order->product_id) ? new ObjectId($order->product_id) : $order->product_id;
             
             $product = Product::where('_id', $productId)->first();
