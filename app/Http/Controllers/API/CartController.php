@@ -7,58 +7,71 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use MongoDB\BSON\ObjectId; // Import MongoDB ObjectId
 
 class CartController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $cartItems = Cart::where('user_id', Auth::id())->get();
-
-        // ✅ Ensure `$cartItems` is always an array
-        if (!$cartItems || $cartItems->isEmpty()) {
-            $cartItems = collect([]); // Return an empty collection
+        // ✅ Ensure the user is authenticated
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return response()->json([
-            'data' => $cartItems,
-        ]);
+        // ✅ Get user's cart items
+        $cartItems = Cart::where('user_id', $user->_id)
+                        ->with('product') // ✅ Eager load product details
+                        ->get();
+
+        return response()->json(['data' => $cartItems], 200);
     }
 
-    public function addToCart( $id)
-    {
-        $product = Product::where('_id', $id)->first();
 
-        if (!$product) {
-            return response()->json([
-                'error' => 'Product not found.',
-            ], 404);
+    public function addToCart(Request $request, $id)
+    {
+        // ✅ Ensure the user is authenticated using Sanctum
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $cartItem = Cart::where('user_id', Auth::id())->where('product_id', $id)->first();
+        // ✅ Convert the ID to MongoDB ObjectId properly
+        if (!preg_match('/^[0-9a-fA-F]{24}$/', $id)) {
+            return response()->json(['error' => 'Invalid Product ID format'], 400);
+        }
+        $objectId = new ObjectId($id);
+
+        // ✅ Find the product in the database
+        $product = Product::where('_id', $objectId)->first();
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        // ✅ Check if the product already exists in the user's cart
+        $cartItem = Cart::where('user_id', $user->_id)
+                        ->where('product_id', $objectId)
+                        ->first();
 
         if ($cartItem) {
+            // ✅ Ensure stock is available before increasing quantity
             if ($cartItem->quantity < $product->quantity) {
-                $cartItem->quantity += 1;
-                $cartItem->save();
+                $cartItem->increment('quantity');
             } else {
-                return response()->json([
-                    'error' => 'Not enough stock available.',
-                ], 400);
+                return response()->json(['error' => 'Not enough stock available'], 400);
             }
         } else {
+            // ✅ Add new product to cart
             Cart::create([
-                'user_id'    => Auth::id(),
-                'product_id' => $id,
+                'user_id'    => $user->_id,
+                'product_id' => $objectId,
                 'quantity'   => 1,
             ]);
         }
 
-        return response()->json([
-            'success' => 'Product added to cart.',
-        ]);
+        return response()->json(['success' => 'Product added to cart'], 200);
     }
-
     // ✅ Update Cart
     public function update(Request $request, $id)
     {
@@ -102,4 +115,3 @@ class CartController extends Controller
         ]);
     }
 }
-   

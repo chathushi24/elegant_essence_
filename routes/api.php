@@ -17,7 +17,7 @@ Route::get('/recent-products', [App\Http\Controllers\API\ProductController::clas
 
 // Cart Routes
 Route::get('/cart', [App\Http\Controllers\API\CartController::class, 'index'])->middleware('auth:sanctum'); 
-Route::post('/cart/{id}', [App\Http\Controllers\API\CartController::class, 'addToCart'])->middleware('auth:sanctum');
+Route::post('/cart/add/{id}', [App\Http\Controllers\API\CartController::class, 'addToCart'])->middleware('auth:sanctum');
 Route::delete('/cart/{id}', [App\Http\Controllers\API\CartController::class, 'remove'])->middleware('auth:sanctum');
 Route::patch('/cart/{id}', [App\Http\Controllers\API\CartController::class, 'update'])->middleware('auth:sanctum');
 

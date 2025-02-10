@@ -8,10 +8,20 @@ use \App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function index(){
-        $products = Product::all();
+    public function index()
+    {
+        $products = Product::all()->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'description' => $product->description,
+                'image' => $product->image ? asset('storage/' . $product->image) : null,
+            ];
+        });
         return response()->json($products);
     }
+    
 
     public function show($id){
         $product = Product::findOrFail($id);
